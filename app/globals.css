@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-bg-dark text-text-primary antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(0, 200, 83, 0.08), transparent 30%),
+    radial-gradient(circle at top right, rgba(68, 138, 255, 0.06), transparent 25%);
+}
+
+@layer components {
+  .container-page {
+    @apply container;
+  }
+
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  .surface {
+    @apply rounded-2xl border border-divider bg-bg-card;
+  }
+
+  .surface-soft {
+    @apply rounded-2xl border border-divider bg-bg-surface;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-accent-green px-5 py-3 font-semibold text-[#0A0A0A] transition hover:opacity-95 hover:shadow-glowGreen;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-divider bg-transparent px-5 py-3 font-semibold text-text-primary transition hover:bg-bg-surface;
+  }
+
+  .badge-live {
+    @apply inline-flex items-center gap-2 rounded-full border border-divider bg-bg-surface px-3 py-1 text-sm text-text-secondary;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-divider bg-bg-card px-4 py-3 text-text-primary outline-none transition placeholder:text-text-hint focus:border-accent-green focus:shadow-glowGreen;
+  }
+
+  .textarea {
+    @apply w-full rounded-xl border border-divider bg-bg-card px-4 py-3 text-text-primary outline-none transition placeholder:text-text-hint focus:border-accent-green focus:shadow-glowGreen;
+  }
+
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-1 hover:border-accent-green/40;
+  }
+
+  .number-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose-dark h1,
+  .prose-dark h2,
+  .prose-dark h3 {
+    @apply text-text-primary;
+  }
+
+  .prose-dark p,
+  .prose-dark li {
+    @apply text-text-secondary;
+  }
+
+  .prose-dark a {
+    @apply text-accent-green;
+  }
+}
