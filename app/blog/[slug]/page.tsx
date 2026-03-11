@@ -1,27 +1,32 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { blogPosts } from "@/data/blog.data";
+import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { PortableText } from "@portabletext/react";
+
+export const revalidate = 60;
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
   return { title: post.title, description: post.excerpt };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const related = blogPosts.filter((p) => p.slug !== slug).slice(0, 2);
+  const allPosts = await getAllPosts();
+  const related = allPosts.filter((p) => p.slug !== slug).slice(0, 2);
 
   return (
     <article className="section">
@@ -31,7 +36,7 @@ export default async function BlogPostPage({ params }: Props) {
         </Link>
 
         <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
+          {post.tags?.map((tag) => (
             <span
               key={tag}
               className="rounded-full border border-divider px-3 py-1 text-xs text-text-secondary"
@@ -47,11 +52,11 @@ export default async function BlogPostPage({ params }: Props) {
         <p className="mt-3 text-text-hint">{post.date}</p>
 
         <div className="prose-dark mt-10 max-w-none">
-          <p>{post.excerpt}</p>
-          <p className="mt-6 text-text-secondary">
-            Полный текст статьи будет добавлен в формате MDX или через CMS.
-            Эта страница является структурной заглушкой для демонстрации архитектуры блога.
-          </p>
+          {post.body ? (
+            <PortableText value={post.body as Parameters<typeof PortableText>[0]["value"]} />
+          ) : (
+            <p>{post.excerpt}</p>
+          )}
         </div>
 
         {related.length > 0 ? (
